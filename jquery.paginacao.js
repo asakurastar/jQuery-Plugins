@@ -3,6 +3,7 @@
  * 
  *
  * @version     1.5
+ *
  * @description Plugin utilizado para criar um sistema de paginação dinâmico
  * 
  * Estrutura HTML de Exemplo:
