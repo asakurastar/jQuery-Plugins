@@ -103,7 +103,7 @@
 					} 
 				};
 				
-				methods.init();		
+				methods.init();	
 			});
 		}
 	});
