@@ -15,7 +15,7 @@
             };
 
             if (settings) {
-				$.extend(config, settings);
+                $.extend(config, settings);
             }
 
             var me = $(this);
