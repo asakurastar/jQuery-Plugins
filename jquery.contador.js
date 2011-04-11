@@ -15,7 +15,7 @@
             };
 
             if (settings) {
-                $.extend(config, settings);
+				$.extend(config, settings);
             }
 
             var me = $(this);
@@ -35,10 +35,7 @@
                     },
 
                     updateProgresso: function() {
-                        $(me).find('.progresso').animate({ 
-							'width': '100%' 
-						}, 
-						{
+                        $(me).find('.progresso').animate({ 'width': '100%' }, {
                             duration: config.delay * config.fim,
 							
                             step: function(now, fx) {
