@@ -6,7 +6,7 @@
  * 
  * Estrutura HTML de Exemplo:
  *
- * O elemento principal precisa ter dimens„o definida
+ * O elemento principal precisa ter dimens√£o definida
  *
  * <style type="text/css">
  * .barra { width: 500px; height: 20px; }  
@@ -18,12 +18,12 @@
  * 
  * $('.barra').fiveContador({
  *    inicio: 0, //Contador inicial
- *    fim: 60, //Tempo em segundos atÈ encerrar o contador
+ *    fim: 60, //Tempo em segundos at√© encerrar o contador
  *    cor: '#000088', //Cor da barra de progresso
- *    delay: 1000, //Delay em milisegundos da atualizaÁ„o do contador
- *    onStart: function() {}, //FunÁ„o callback a ser disparada antes do contador ser iniciado
- *    onUpdate: function([value]) {}, //FunÁ„o callback a ser disparada a cada progresso do contador. O argumento opcional value retorna o percentual do progrsso
- *    onComplete: function() {}, //FunÁ„o callback a ser disparada apÛs o tÈrmino do contador
+ *    delay: 1000, //Delay em milisegundos da atualiza√ß√£o do contador
+ *    onStart: function() {}, //Fun√ß√£o callback a ser disparada antes do contador ser iniciado
+ *    onUpdate: function([value]) {}, //Fun√ß√£o callback a ser disparada a cada progresso do contador. O argumento opcional value retorna o percentual do progrsso
+ *    onComplete: function() {}, //Fun√ß√£o callback a ser disparada ap√≥s o t√©rmino do contador
  * });
  * 
  */
