@@ -3,21 +3,21 @@
  * 
  * @author      Daniel dos Reis
  * @version     1.4
- * @description Plugin utilizado para validar campos obrigatÛrios em um formul·rio
+ * @description Plugin utilizado para validar campos obrigat√≥rios em um formul√°rio
  * 
- * Formul·rio de Exemplo:
+ * Formul√°rio de Exemplo:
  * <form id="form" method="post" action="index.html">
  *   <input class="obrigatorio" type="text" name="pessoa" title="Pessoa" />
- *   <textarea class="obrigatorio" name="descricao" title="DescriÁ„o"></textarea>
+ *   <textarea class="obrigatorio" name="descricao" title="Descri√ß√£o"></textarea>
  * </form> 
  *
  * Forma de uso
  * $('#form').formCheck({
- *   fldclass : 'obrigatorio', //O nome da classe utilizada pelos campos de preenchimento obrigatÛrios
+ *   fldclass : 'obrigatorio', //O nome da classe utilizada pelos campos de preenchimento obrigat√≥rios
  *   attrb : 'title', //O Atributo utilizado para representar o nome do campo
- *   errMsg : '… obrigatÛrio o preenchimento do campo %campo%', //Mensagem a ser exibida (A vari·vel %campo% retorna o nome do campo em quest„o)
- *   errBox : '#aviso', //O elemento do qual ser„o exibidos as mensagens de erros
- *   output : 'html' //Especifica se as mensagens de erros ser„o exibidas em um elemento (html) definido em errBox ou via alerta de Javascript (alert)
+ *   errMsg : '√â obrigat√≥rio o preenchimento do campo %campo%', //Mensagem a ser exibida (A vari√°vel %campo% retorna o nome do campo em quest√£o)
+ *   errBox : '#aviso', //O elemento do qual ser√£o exibidos as mensagens de erros
+ *   output : 'html' //Especifica se as mensagens de erros ser√£o exibidas em um elemento (html) definido em errBox ou via alerta de Javascript (alert)
  * });
  *
  * O Valor de retorno √© True ou False
