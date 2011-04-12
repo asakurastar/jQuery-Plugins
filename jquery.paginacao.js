@@ -1,55 +1,55 @@
-/*
- * jQuery Plugin - PaginaÁ„o
+Ôªø/*
+ * jQuery Plugin - Pagina√ß√£o
  * 
  *
  * @version     1.5
  *
- * @description Plugin utilizado para criar um sistema de paginaÁ„o din‚mico
+ * @description Plugin utilizado para criar um sistema de pagina√ß√£o din√¢mico
  * 
  * Estrutura HTML de Exemplo:
  *
  * <div class="paginacao">
  *   <ul>
- *     <li>Conte˙do.........</li>
- *     <li>Outro conte˙do...</li>
+ *     <li>Conte√∫do.........</li>
+ *     <li>Outro conte√∫do...</li>
  *   </ul>
  * </div>
  *
  * <div class="paginas"></div>
  *
  * OBS 1: Utilizar sempre a hierarquia UL > LI
- * OBS 2: A DIV de classe "paginas" È opcional, sua declaraÁ„o È obrigatÛria apenas quando deseja-se exibir a numeraÁ„o de p·ginas, conforme explicado mais abaixo.
+ * OBS 2: A DIV de classe "paginas" √© opcional, sua declara√ß√£o √© obrigat√≥ria apenas quando deseja-se exibir a numera√ß√£o de p√°ginas, conforme explicado mais abaixo.
  * OBS 3: As classes "paginacao" e "paginas" possuem estes nomes apenas para fins de exemplos.
  *
  * Formas de uso:
  *
- * $('.paginacao').fivePaginacao(); //DeclaraÁ„o padr„o, ser· utilizado as propriedades descritas abaixo
+ * $('.paginacao').fivePaginacao(); //Declara√ß√£o padr√£o, ser√° utilizado as propriedades descritas abaixo
  *
  * $('.paginacao').fivePaginacao({
- *   quantidade : 5, //Quantidade de informaÁıes/registros por p·gina. Padr„o: 5
- *   inicio : 1, //P·gina a ser exibida inicialmente. Padr„o: 1 
- *   exibir : true, //Exibe ou n„o inicialmente a numeraÁ„o de p·ginas. Padr„o: true
- *   paginas : '.paginas', //Elemento a receber a numeraÁ„o de p·ginas. Padr„o: classe .paginas
- *   onLoad : fnction([index]) { ... } //Uma funÁ„o callback que ser· executada ao carregar o plugin. O argumento opcional index retorna a p·gina inicial
- *   beforeShow : function([index]) { ... } //Uma funÁ„o callback que ser· executada antes da mudanÁa de uma p·gina. O argumento opcional index retorna o n˙mero da p·gina atual
- *   afterShow : function(index) { ... } //Uma funÁ„o callback que ser· executada apÛs a mudanÁa de uma p·gina. O argumento opcional index retorna o n˙mero da nova p·gina
+ *   quantidade : 5, //Quantidade de informa√ß√µes/registros por p√°gina. Padr√£o: 5
+ *   inicio : 1, //P√°gina a ser exibida inicialmente. Padr√£o: 1 
+ *   exibir : true, //Exibe ou n√£o inicialmente a numera√ß√£o de p√°ginas. Padr√£o: true
+ *   paginas : '.paginas', //Elemento a receber a numera√ß√£o de p√°ginas. Padr√£o: classe .paginas
+ *   onLoad : fnction([index]) { ... } //Uma fun√ß√£o callback que ser√° executada ao carregar o plugin. O argumento opcional index retorna a p√°gina inicial
+ *   beforeShow : function([index]) { ... } //Uma fun√ß√£o callback que ser√° executada antes da mudan√ßa de uma p√°gina. O argumento opcional index retorna o n√∫mero da p√°gina atual
+ *   afterShow : function(index) { ... } //Uma fun√ß√£o callback que ser√° executada ap√≥s a mudan√ßa de uma p√°gina. O argumento opcional index retorna o n√∫mero da nova p√°gina
  * }); 
  *
- * Propriedades P˙blicas
+ * Propriedades P√∫blicas
  * 
- * objeto.items; //Retorna uma coleÁ„o de objetos que representam um item. Ex: objeto.items.eq(0).html(); //Retorna o conte˙do do primeiro item
+ * objeto.items; //Retorna uma cole√ß√£o de objetos que representam um item. Ex: objeto.items.eq(0).html(); //Retorna o conte√∫do do primeiro item
  * 
- * MÈtodos Auxiliares:
+ * M√©todos Auxiliares:
  *
- * objeto.exibirPagina(inteiro); //Muda para a p·gina passada como argumento
- * objeto.exibirPaginacao(); //Exibe a numeraÁ„o de p·ginas (Ao clicar em uma numeraÁ„o, a p·gina ser· alterada)
- * objeto.paginaAtual(); //Retorna o n˙mero da p·gina atual
- * objeto.onLoad(callback([index])); //Executa uma funÁ„o callback ao carregar o plugin. O argumento opcional index da callback retorna a p·gina inicial
- * objeto.beforeShow(callback([index])); //Executa uma funÁ„o callback que ser· executada antes da mudanÁa de uma p·gina. O argumento opcional index da callback retorna o n˙mero da p·gina
+ * objeto.exibirPagina(inteiro); //Muda para a p√°gina passada como argumento
+ * objeto.exibirPaginacao(); //Exibe a numera√ß√£o de p√°ginas (Ao clicar em uma numera√ß√£o, a p√°gina ser√° alterada)
+ * objeto.paginaAtual(); //Retorna o n√∫mero da p√°gina atual
+ * objeto.onLoad(callback([index])); //Executa uma fun√ß√£o callback ao carregar o plugin. O argumento opcional index da callback retorna a p√°gina inicial
+ * objeto.beforeShow(callback([index])); //Executa uma fun√ß√£o callback que ser√° executada antes da mudan√ßa de uma p√°gina. O argumento opcional index da callback retorna o n√∫mero da p√°gina
  * atual
  *
- * objeto.afterShow(callback([index])); //Executa uma funÁ„o callback que ser· executada apÛs a mudanÁa de uma p·gina. O argumento opcional index da callback retorna o n˙mero da nova 
- * p·gina
+ * objeto.afterShow(callback([index])); //Executa uma fun√ß√£o callback que ser√° executada ap√≥s a mudan√ßa de uma p√°gina. O argumento opcional index da callback retorna o n√∫mero da nova 
+ * p√°gina
  */
 
 (function($){
