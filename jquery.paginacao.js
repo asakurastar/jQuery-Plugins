@@ -1,4 +1,4 @@
-﻿/*
+/*
  * jQuery Plugin - Paginação
  * 
  *
