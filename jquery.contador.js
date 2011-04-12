@@ -18,11 +18,10 @@
                 $.extend(config, settings);
             }
 
-            var me = $(this);
+            var me = this;
 
             return this.each(function() {
                 var methods = {
-                    timer: undefined,
 
                     progresso: '<div style="width: 0px; height: ' + $(me).height() + 'px; background-color: ' + config.cor + ';" class="progresso"></div>',
 
@@ -37,6 +36,8 @@
                     updateProgresso: function() {
                         $(me).find('.progresso').animate({ 'width': '100%' }, {
                             duration: config.delay * config.fim,
+							
+                            easing: 'linear', 
 							
                             step: function(now, fx) {
                                 config.onUpdate(now.toFixed(2));
