@@ -16,11 +16,11 @@
  *   fldclass : 'obrigatorio', //O nome da classe utilizada pelos campos de preenchimento obrigatórios
  *   attrb : 'title', //O Atributo utilizado para representar o nome do campo
  *   errMsg : 'É obrigatório o preenchimento do campo %campo%', //Mensagem a ser exibida (A variável %campo% retorna o nome do campo em questão)
- *   errBox : '#aviso', //O elemento do qual será exibido as mensagens de erros
+ *   errBox : '#aviso', //O elemento do qual serão exibidos as mensagens de erros
  *   output : 'html' //Especifica se as mensagens de erros serão exibidas em um elemento (html) definido em errBox ou via alerta de Javascript (alert)
  * });
  *
- * O Valor de retorno é True ou False
+ * O Valor de retorno Ã© True ou False
  */
  
 (function($){
