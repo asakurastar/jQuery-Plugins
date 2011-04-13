@@ -63,7 +63,7 @@
                         $(me).find('.progresso').animate({
                             'width': '100%'
                         }, {
-                            duration: config.delay * config.fim,
+                            duration: config.delay * (config.fim - config.inicio),
 
                             easing: 'linear',
 
