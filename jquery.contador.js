@@ -45,30 +45,32 @@
             }
 
             var me = this;
-
+            var inicial = ((100 * config.inicio) / config.fim);
+            
             return this.each(function() {
                 var methods = {
-
-                    progresso: '<div style="width: 0px; height: ' + $(me).height() + 'px; background-color: ' + config.cor + ';" class="progresso"></div>',
+                    progresso: '<div style="width: ' + inicial + '%; height: ' + $(me).height() + 'px; background-color: ' + config.cor + ';" class="progresso"></div>',
 
                     init: function() {
                         $(me).html(methods.progresso);
 
                         config.onStart();
-						
+
                         methods.updateProgresso();
                     },
 
                     updateProgresso: function() {
-                        $(me).find('.progresso').animate({ 'width': '100%' }, {
+                        $(me).find('.progresso').animate({
+                            'width': '100%'
+                        }, {
                             duration: config.delay * config.fim,
-							
-                            easing: 'linear', 
-							
+
+                            easing: 'linear',
+
                             step: function(now, fx) {
                                 config.onUpdate(now.toFixed(2));
                             },
-							
+
                             complete: function() {
                                 config.onComplete();
                             }
