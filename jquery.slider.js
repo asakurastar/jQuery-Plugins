@@ -8,7 +8,7 @@
                 items: 5,
                 left: '.left',
                 right: '.right',
-				duration: 'slow',
+		duration: 'slow',
                 onChange: function() {}
             };
 
