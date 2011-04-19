@@ -9,8 +9,8 @@
  * <div class="left"></div>
  * <div class="slider">
  *   <ul>
- *     <li>Conteúdo</li>
- *     <li>Outro conteúdo</li>
+ *     <li>ConteÃºdo</li>
+ *     <li>Outro conteÃºdo</li>
  *   </ul>
  * </div>
  * <div class="right"></div>
@@ -20,11 +20,11 @@
  * $('.slider').slider({
  *  items: 5, //Quantidade de itens por bloco
  *  start: 0, //Imagem inicial
- *  left: '.left', //Navegação para esquerda
- *  right: '.right', //Navegação para direita
- *  duration: 'slow', //Delay da transição de blocos
- *  onChange: function() {}, //Callback que será disparado a cada mudança de bloco
- *  onClick: function( [object] ) {} //Callback que será disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
+ *  left: '.left', //NavegaÃ§Ã£o para esquerda
+ *  right: '.right', //NavegaÃ§Ã£o para direita
+ *  duration: 'slow', //Delay da transiÃ§Ã£o de blocos
+ *  onChange: function() {}, //Callback que serÃ¡ disparado a cada mudanÃ§aa de bloco
+ *  onClick: function( [object] ) {} //Callback que serÃ¡ disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
  * });
  * 
  */
