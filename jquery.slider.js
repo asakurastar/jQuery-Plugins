@@ -9,8 +9,8 @@
  * <div class="left"></div>
  * <div class="slider">
  *   <ul>
- *     <li>Conte˙do</li>
- *     <li>Outro conte˙do</li>
+ *     <li>Conte√∫do</li>
+ *     <li>Outro conte√∫do</li>
  *   </ul>
  * </div>
  * <div class="right"></div>
@@ -20,12 +20,12 @@
  * $('.slider').slider({
  *   items: 5, //Quantidade de itens por bloco
  *   start: 0, //Item inicial
- *   left: '.left', //NavegaÁ„o para esquerda
- *   right: '.right', //NavegaÁ„o para direita
- *   duration: 'slow', //Delay da transiÁ„o de blocos
- *   onStart: function( [object] ) {}, //Callback que ser· disparada apÛs o plugin ser inicializado. O argumento opcional retorna o item inicial em objeto jQuery
- *   onChange: function() {}, //Callback que ser· disparada a cada mudanÁa de bloco
- *   onClick: function( [object] ) {} //Callback que ser· disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
+ *   left: '.left', //Navega√ß√£o para esquerda
+ *   right: '.right', //Navega√ß√£o para direita
+ *   duration: 'slow', //Delay da transi√ß√£o de blocos
+ *   onStart: function( [object] ) {}, //Callback que ser√° disparada ap√≥s o plugin ser inicializado. O argumento opcional retorna o item inicial em objeto jQuery
+ *   onChange: function() {}, //Callback que ser√° disparada a cada mudan√ßa de bloco
+ *   onClick: function( [object] ) {} //Callback que ser√° disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
  * });
  * 
  */
