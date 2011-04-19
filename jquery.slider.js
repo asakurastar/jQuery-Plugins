@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     2.2
+ * @version     2.4
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -18,13 +18,14 @@
  * Forma de uso:
  * 
  * $('.slider').slider({
- *  items: 5, //Quantidade de itens por bloco
- *  start: 0, //Imagem inicial
- *  left: '.left', //Navegação para esquerda
- *  right: '.right', //Navegação para direita
- *  duration: 'slow', //Delay da transição de blocos
- *  onChange: function() {}, //Callback que será disparado a cada mudança de bloco
- *  onClick: function( [object] ) {} //Callback que será disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
+ *   items: 5, //Quantidade de itens por bloco
+ *   start: 0, //Item inicial
+ *   left: '.left', //Navegação para esquerda
+ *   right: '.right', //Navegação para direita
+ *   duration: 'slow', //Delay da transição de blocos
+ *   onStart: function( [object] ) {}, //Callback que será disparada após o plugin ser inicializado. O argumento opcional retorna o item inicial em objeto jQuery
+ *   onChange: function() {}, //Callback que será disparada a cada mudança de bloco
+ *   onClick: function( [object] ) {} //Callback que será disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
  * });
  * 
  */
@@ -37,6 +38,7 @@
                 left: '.left',
                 right: '.right',
                 duration: 'slow',
+				onStart: function() {},
                 onChange: function() {},
                 onClick: function() {}
             };
@@ -60,8 +62,8 @@
                         $(config.left).click(methods.moveLeft);
                         $(config.right).click(methods.moveRight);
                         
-                        methods.start();
                         methods.bindClick();
+                        methods.start();
                     },
 
                     normalize: function() {
@@ -95,6 +97,8 @@
                     start: function() {
                         step = methods.findStep(config.start);
                         me.scrollLeft(++step * (items.outerWidth(true) * config.items));
+						
+                        config.onStart(items.eq(config.start));
                     },
                    
                     bindClick: function() {
