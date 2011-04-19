@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     2.4
+ * @version     2.5
  * @description 
  * 
  * Estrutura HTML de Exemplo:
