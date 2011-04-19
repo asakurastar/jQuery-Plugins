@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     2.5
+ * @version     2.6
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -87,6 +87,10 @@
                                 'scrollLeft' : (++step * (items.outerWidth(true) * config.items))
                             }, config.duration, config.onChange);
                         }
+						else {
+							step = 0;
+							me.animate({ 'scrollLeft' : step }, config.duration, config.onChange);
+						}
                     },
                     
                     findStep: function(index) {
