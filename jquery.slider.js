@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     2.6
+ * @version     2.8
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -30,6 +30,11 @@
  * 
  */
 (function($) {
+    $.fn.hasEvent = function(c) {
+        var b = this.data("events");
+        return (b && b[c]);
+    };
+
     $.fn.extend({
         slider: function(settings) {
             var config = {
@@ -38,7 +43,7 @@
                 left: '.left',
                 right: '.right',
                 duration: 'slow',
-				onStart: function() {},
+                onStart: function() {},
                 onChange: function() {},
                 onClick: function() {}
             };
@@ -52,8 +57,9 @@
                 var parent = me.find('ul');
                 var items = parent.find('li');
                 var step = 0;
-                var max = Math.ceil(items.size() / config.items)-1;
-               
+                var max = Math.ceil(items.size() / config.items) - 1;
+                var ct = 1;
+
                 var methods = {
 
                     init: function() {
@@ -61,9 +67,10 @@
 
                         $(config.left).click(methods.moveLeft);
                         $(config.right).click(methods.moveRight);
-                        
+
                         methods.bindClick();
                         methods.start();
+                        methods.moveable();
                     },
 
                     normalize: function() {
@@ -73,10 +80,32 @@
                         items.css("float", "left");
                     },
 
+                    moveable: function() {
+                        parent.mousedown(function(e) {
+                            var inicio = e.pageX;
+
+                            parent.mousemove(function(e) {
+                                var posicao = e.pageX;
+
+                                if (posicao < inicio) {
+                                    methods.moveRight();
+                                    $(this).unbind('mousemove');
+                                }
+                                else if (posicao > inicio) {
+                                    methods.moveLeft();
+                                    $(this).unbind('mousemove');
+                                }
+                            });
+                            
+                        }).mouseup(function() {
+							$(this).unbind('mousemove');  
+                        });
+                    },
+                    
                     moveLeft: function() {
                         if (step > 0) {
                             me.animate({
-                                'scrollLeft' : (--step * (items.outerWidth(true) * config.items))
+                                'scrollLeft': (--step * (items.outerWidth(true) * config.items))
                             }, config.duration, config.onChange);
                         }
                     },
@@ -84,29 +113,40 @@
                     moveRight: function() {
                         if (step < max) {
                             me.animate({
-                                'scrollLeft' : (++step * (items.outerWidth(true) * config.items))
+                                'scrollLeft': (++step * (items.outerWidth(true) * config.items))
                             }, config.duration, config.onChange);
                         }
-						else {
-							step = 0;
-							me.animate({ 'scrollLeft' : step }, config.duration, config.onChange);
-						}
+                        else {
+                            ct++;
+                            var clone = items.clone();
+                            parent.css("width", items.outerWidth(true) * (items.size() * ct));
+                            parent.append(clone);
+                            max = Math.ceil((items.size() * ct) / config.items) - 1;
+
+                            me.animate({
+                                'scrollLeft': (++step * (items.outerWidth(true) * config.items))
+                            }, config.duration, config.onChange);
+                        }
                     },
-                    
+
                     findStep: function(index) {
-                        var item = Math.floor(index / config.items)-1;
+                        var item = Math.floor(index / config.items) - 1;
                         return item;
                     },
-                    
+
                     start: function() {
                         step = methods.findStep(config.start);
                         me.scrollLeft(++step * (items.outerWidth(true) * config.items));
-						
+
                         config.onStart(items.eq(config.start));
                     },
-                   
+
                     bindClick: function() {
-                        items.click(function() { config.onClick($(this)); });
+                        parent.unbind('mousemove');
+                        
+                        items.live('click', function() {
+                            config.onClick($(this));
+                        });
                     }
                 };
 
