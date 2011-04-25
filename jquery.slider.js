@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     3.1
+ * @version     3.2
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -31,11 +31,6 @@
  * 
  */
 (function($) {
-    $.fn.hasEvent = function(c) {
-        var b = this.data("events");
-        return (b && b[c]);
-    };
-
     $.fn.extend({
         slider: function(settings) {
             var config = {
