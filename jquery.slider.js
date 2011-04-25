@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     3.0
+ * @version     3.1
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -23,6 +23,7 @@
  *   left: '.left', //Navegação para esquerda
  *   right: '.right', //Navegação para direita
  *   duration: 'slow', //Delay da transição de blocos
+ *   mouseMove: true, //Permite ou não o deslocamento de blocos através de drag-drop pelo mouse
  *   onStart: function( [object] ) {}, //Callback que será disparada após o plugin ser inicializado. O argumento opcional retorna o item inicial em objeto jQuery
  *   onChange: function() {}, //Callback que será disparada a cada mudança de bloco
  *   onClick: function( [object] ) {} //Callback que será disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
@@ -43,6 +44,7 @@
                 left: '.left',
                 right: '.right',
                 duration: 'slow',
+                mouseMove: true,
                 onStart: function() {},
                 onChange: function() {},
                 onClick: function() {}
@@ -70,7 +72,10 @@
 
                         methods.bindClick();
                         methods.start();
-                        methods.moveable();
+
+                        if (config.mouseMove) {
+                            methods.moveable();
+                        }
                     },
 
                     normalize: function() {
@@ -96,12 +101,12 @@
                                     $(this).unbind('mousemove');
                                 }
                             });
-                            
+
                         }).mouseup(function() {
-							$(this).unbind('mousemove');  
+                            $(this).unbind('mousemove');
                         });
                     },
-                    
+
                     moveLeft: function() {
                         if (step > 0) {
                             me.animate({
@@ -143,7 +148,7 @@
 
                     bindClick: function() {
                         parent.unbind('mousemove');
-                        
+
                         items.live('click', function() {
                             config.onClick($(this));
                         });
