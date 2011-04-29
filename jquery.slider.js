@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     3.2
+ * @version     3.4
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -56,6 +56,7 @@
                 var step = 0;
                 var max = Math.ceil(items.size() / config.items) - 1;
                 var ct = 1;
+                var item;
 
                 var methods = {
 
@@ -66,11 +67,12 @@
                         $(config.right).click(methods.moveRight);
 
                         methods.bindClick();
-                        methods.start();
 
                         if (config.mouseMove) {
                             methods.moveable();
                         }
+
+                        methods.start();
                     },
 
                     normalize: function() {
@@ -117,24 +119,28 @@
                             }, config.duration, config.onChange);
                         }
                         else {
-                            ct++;
-                            var clone = items.clone();
-                            parent.css("width", items.outerWidth(true) * (items.size() * ct));
-                            parent.append(clone);
-                            max = Math.ceil((items.size() * ct) / config.items) - 1;
+                            if (max > 0) {
+                                ct++;
+                                var clone = items.clone();
+                                parent.css("width", items.outerWidth(true) * (items.size() * ct));
+                                parent.append(clone);
+                                max = Math.ceil((items.size() * ct) / config.items) - 1;
 
-                            me.animate({
-                                'scrollLeft': (++step * (items.outerWidth(true) * config.items))
-                            }, config.duration, config.onChange);
+                                me.animate({
+                                    'scrollLeft': (++step * (items.outerWidth(true) * config.items))
+                                }, config.duration, config.onChange);
+                            }
                         }
                     },
 
                     findStep: function(index) {
-                        var item = Math.floor(index / config.items) - 1;
-                        return item;
+                        var find = Math.floor(index / config.items) - 1;
+                        return find;
                     },
 
                     start: function() {
+                        item = config.start;
+
                         step = methods.findStep(config.start);
                         me.scrollLeft(++step * (items.outerWidth(true) * config.items));
 
@@ -145,6 +151,7 @@
                         parent.unbind('mousemove');
 
                         items.live('click', function() {
+                            item = $(this).index();
                             config.onClick($(this));
                         });
                     }
