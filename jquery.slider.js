@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     3.4
+ * @version     3.5
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -22,6 +22,7 @@
  *   start: 0, //Item inicial
  *   left: '.left', //Navegação para esquerda
  *   right: '.right', //Navegação para direita
+ *   dir: 'h', //Define a direção do deslocamento (h = Horizontal (Default). Qualquer outro valor será considerado Vertical)
  *   duration: 'slow', //Delay da transição de blocos
  *   mouseMove: true, //Permite ou não o deslocamento de blocos através de drag-drop pelo mouse
  *   onStart: function( [object] ) {}, //Callback que será disparada após o plugin ser inicializado. O argumento opcional retorna o item inicial em objeto jQuery
@@ -38,6 +39,7 @@
                 start: 0,
                 left: '.left',
                 right: '.right',
+                dir: 'h',
                 duration: 'slow',
                 mouseMove: true,
                 onStart: function() {},
@@ -53,7 +55,10 @@
                 var me = $(this);
                 var parent = me.find('ul');
                 var items = parent.find('li');
-                var step = 0;
+                var step = {
+                    x: 0,
+                    y: 0
+                };
                 var max = Math.ceil(items.size() / config.items) - 1;
                 var ct = 1;
                 var item;
@@ -63,8 +68,14 @@
                     init: function() {
                         methods.normalize();
 
-                        $(config.left).click(methods.moveLeft);
-                        $(config.right).click(methods.moveRight);
+                        if (config.dir == 'h') {
+                            $(config.left).click(methods.moveLeft);
+                            $(config.right).click(methods.moveRight);
+                        }
+                        else {
+                            $(config.left).click(methods.moveUp);
+                            $(config.right).click(methods.moveDown);
+                        }
 
                         methods.bindClick();
 
@@ -76,25 +87,45 @@
                     },
 
                     normalize: function() {
-                        me.css("width", items.outerWidth(true) * config.items);
                         me.css("overflow", "hidden");
-                        parent.css("width", items.outerWidth(true) * items.size());
+
+                        if (config.dir == 'h') {
+                            me.css("width", items.outerWidth(true) * config.items);
+                            parent.css("width", items.outerWidth(true) * items.size());
+                        }
+                        else {
+                            me.css("height", items.outerHeight(true) * config.items);
+                            parent.css("height", items.outerHeight(true) * items.size());
+                        }
+
                         items.css("float", "left");
                     },
 
                     moveable: function() {
                         parent.mousedown(function(e) {
-                            var inicio = e.pageX;
+                            var inicio = (config.dir == 'h' ? e.pageX : e.pageY);
 
                             parent.mousemove(function(e) {
-                                var posicao = e.pageX;
+                                var posicao = (config.dir == 'h' ? e.pageX : e.pageY);
 
                                 if (posicao < inicio) {
-                                    methods.moveRight();
+                                    if (config.dir == 'h') {
+                                        methods.moveRight();
+                                    }
+                                    else {
+                                        methods.moveDown();
+                                    }
+
                                     $(this).unbind('mousemove');
                                 }
                                 else if (posicao > inicio) {
-                                    methods.moveLeft();
+                                    if (config.dir == 'h') {
+                                        methods.moveLeft();
+                                    }
+                                    else {
+                                        methods.moveUp();
+                                    }
+
                                     $(this).unbind('mousemove');
                                 }
                             });
@@ -104,18 +135,26 @@
                         });
                     },
 
-                    moveLeft: function() {
-                        if (step > 0) {
+                    moveUp: function() {
+                        if (step.y > 0) {
                             me.animate({
-                                'scrollLeft': (--step * (items.outerWidth(true) * config.items))
+                                'scrollTop': (--step.y * (items.outerHeight(true) * config.items))
+                            }, config.duration, config.onChange);
+                        }
+                    },
+
+                    moveLeft: function() {
+                        if (step.x > 0) {
+                            me.animate({
+                                'scrollLeft': (--step.x * (items.outerWidth(true) * config.items))
                             }, config.duration, config.onChange);
                         }
                     },
 
                     moveRight: function() {
-                        if (step < max) {
+                        if (step.x < max) {
                             me.animate({
-                                'scrollLeft': (++step * (items.outerWidth(true) * config.items))
+                                'scrollLeft': (++step.x * (items.outerWidth(true) * config.items))
                             }, config.duration, config.onChange);
                         }
                         else {
@@ -127,7 +166,28 @@
                                 max = Math.ceil((items.size() * ct) / config.items) - 1;
 
                                 me.animate({
-                                    'scrollLeft': (++step * (items.outerWidth(true) * config.items))
+                                    'scrollLeft': (++step.x * (items.outerWidth(true) * config.items))
+                                }, config.duration, config.onChange);
+                            }
+                        }
+                    },
+
+                    moveDown: function() {
+                        if (step.y < max) {
+                            me.animate({
+                                'scrollTop': (++step.y * (items.outerHeight(true) * config.items))
+                            }, config.duration, config.onChange);
+                        }
+                        else {
+                            if (max > 0) {
+                                ct++;
+                                var clone = items.clone();
+                                parent.css("height", items.outerHeight(true) * (items.size() * ct));
+                                parent.append(clone);
+                                max = Math.ceil((items.size() * ct) / config.items) - 1;
+
+                                me.animate({
+                                    'scrollTop': (++step.y * (items.outerHeight(true) * config.items))
                                 }, config.duration, config.onChange);
                             }
                         }
@@ -141,8 +201,8 @@
                     start: function() {
                         item = config.start;
 
-                        step = methods.findStep(config.start);
-                        me.scrollLeft(++step * (items.outerWidth(true) * config.items));
+                        step.x = methods.findStep(config.start);
+                        me.scrollLeft(++step.x * (items.outerWidth(true) * config.items));
 
                         config.onStart(items.eq(config.start));
                     },
