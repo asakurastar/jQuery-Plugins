@@ -1,15 +1,15 @@
 /*
  * jQuery Plugin - Spread
  * 
- * @version     1.1
+ * @version     1.2
  * 
  * Estrutura HTML de Exemplo:
  *
  * <div class="spread">
  *   <ul>
- *     <li>Conteúdo</li>
- *     <li>Outro conteúdo</li>
- *     <li>Mais conteúdo</li>
+ *     <li>Conteudo</li>
+ *     <li>Outro conteudo</li>
+ *     <li>Mais conteudo</li>
  *   </ul>
  * </div>
  *
@@ -59,7 +59,7 @@
                         $items.hoverIntent(function() {
 
                             //Compatibilidade
-                            if (version <= 1.4) {
+                            if (version <= 1.5) {
                                 $items.animate({
                                     width: config.closed
                                 }, {
