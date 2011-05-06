@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Spread
  * 
- * @version     1.0
+ * @version     1.1
  * 
  * Estrutura HTML de Exemplo:
  *
@@ -39,6 +39,7 @@
                 var $me = $(this);
                 var $parent = $me.find('ul');
                 var $items = $parent.find('li');
+                var version = parseFloat($.fn.jquery);
 
                 var methods = {
                     init: function() {
@@ -54,24 +55,43 @@
                     },
 
                     start: function() {
+
                         $items.hoverIntent(function() {
-                            $(this).animate({
-                                width: config.opened
-                            }, {
-                                duration: 500,
-                                queue: false
-                            });
 
-                            $items.animate({
-                                width: config.closed
-                            }, {
-                                duration: 500,
-                                queue: false
-                            });
+                            //Compatibilidade
+                            if (version <= 1.4) {
+                                $items.animate({
+                                    width: config.closed
+                                }, {
+                                    duration: 500,
+                                    queue: false
+                                });
+
+                                $(this).animate({
+                                    width: config.opened
+                                }, {
+                                    duration: 500,
+                                    queue: false
+                                });
+                            }
+                            else {
+                                $(this).animate({
+                                    width: config.opened
+                                }, {
+                                    duration: 500,
+                                    queue: false
+                                });
+
+                                $items.animate({
+                                    width: config.closed
+                                }, {
+                                    duration: 500,
+                                    queue: false
+                                });
+
+                            }
                         }, function() {});
-
                     }
-
                 };
 
                 methods.init();
