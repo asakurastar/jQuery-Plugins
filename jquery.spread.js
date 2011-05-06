@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Spread
  * 
- * @version     1.2
+ * @version     1.3
  * 
  * Estrutura HTML de Exemplo:
  *
@@ -19,6 +19,7 @@
  *   start: 0, //Define o item inicial aberto
  *   opened: 200, //Define a largura (em pixels) do item aberto
  *   closed: 50, //Define a largura (em pixels) dos itens fechado
+ *   dir: 'h' //Define a direção de deslocamento (h = Horizontal ou v = Vertical)
  * });
  * 
  */
@@ -28,7 +29,8 @@
             var config = {
                 start: 0,
                 opened: 200,
-                closed: 50
+                closed: 50,
+                dir: 'h'
             };
 
             if (settings) {
@@ -40,16 +42,36 @@
                 var $parent = $me.find('ul');
                 var $items = $parent.find('li');
                 var version = parseFloat($.fn.jquery);
+                var direction = {
+                    h: {
+                        opened: {
+                            width: config.opened
+                        },
+                        closed: {
+                            width: config.closed
+                        }
+                    },
+                    v: {
+                        opened: {
+                            height: config.opened
+                        },
+                        closed: {
+                            height: config.closed
+                        }
+                    }
+                };
 
                 var methods = {
                     init: function() {
-                        $items.css({
-                            'width': config.closed,
-                            'overflow': 'hidden',
-                            'float': 'left'
-                        });
+                        $items.css('overflow', 'hidden');
 
-                        $items.eq(config.start).css('width', config.opened);
+                        $items.css(direction[config.dir].closed);
+
+                        if (config.dir == 'h') {
+                            $items.css('float', 'left');
+                        }
+
+                        $items.eq(config.start).css(direction[config.dir].opened);
 
                         methods.start();
                     },
@@ -59,32 +81,24 @@
                         $items.hoverIntent(function() {
 
                             //Compatibilidade
-                            if (version <= 1.5) {
-                                $items.animate({
-                                    width: config.closed
-                                }, {
+                            if (version <= 1.4) {
+                                $items.animate(direction[config.dir].closed, {
                                     duration: 500,
                                     queue: false
                                 });
 
-                                $(this).animate({
-                                    width: config.opened
-                                }, {
+                                $(this).animate(direction[config.dir].opened, {
                                     duration: 500,
                                     queue: false
                                 });
                             }
                             else {
-                                $(this).animate({
-                                    width: config.opened
-                                }, {
+                                $(this).animate(direction[config.dir].opened, {
                                     duration: 500,
                                     queue: false
                                 });
 
-                                $items.animate({
-                                    width: config.closed
-                                }, {
+                                $items.animate(direction[config.dir].closed, {
                                     duration: 500,
                                     queue: false
                                 });
