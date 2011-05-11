@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     3.5
+ * @version     3.6
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -24,7 +24,8 @@
  *   right: '.right', //Navegação para direita
  *   dir: 'h', //Define a direção do deslocamento (h = Horizontal (Default). Qualquer outro valor será considerado Vertical)
  *   duration: 'slow', //Delay da transição de blocos
- *   mouseMove: true, //Permite ou não o deslocamento de blocos através de drag-drop pelo mouse
+ *   mouseMove: false, //Permite ou não o deslocamento de blocos através de drag-drop pelo mouse
+ *   keyMove: false, //Permite ou não trocar de imagem pelo teclado (Não funciona no Google Chrome)
  *   onStart: function( [object] ) {}, //Callback que será disparada após o plugin ser inicializado. O argumento opcional retorna o item inicial em objeto jQuery
  *   onChange: function() {}, //Callback que será disparada a cada mudança de bloco
  *   onClick: function( [object] ) {} //Callback que será disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
@@ -41,7 +42,8 @@
                 right: '.right',
                 dir: 'h',
                 duration: 'slow',
-                mouseMove: true,
+                mouseMove: false,
+				keyMove: false,
                 onStart: function() {},
                 onChange: function() {},
                 onClick: function() {}
@@ -82,6 +84,10 @@
                         if (config.mouseMove) {
                             methods.moveable();
                         }
+						
+						if (config.keyMove) {
+							methods.moveByKey();
+						}
 
                         methods.start();
                     },
@@ -134,7 +140,36 @@
                             $(this).unbind('mousemove');
                         });
                     },
+					
+                    moveByKey: function() {
 
+                        me.bind('focusin', function() {
+                            me.bind('keydown', function(e) {
+
+                                switch (e.which) {
+                                case 37:
+                                    if (item % config.items == (config.items - 1)) {
+                                        methods.moveLeft();
+                                    }
+                                    items.eq(--item).trigger('click');
+                                    break;
+                                case 39:
+                                    if (item % config.items == (config.items - 1)) {
+                                        methods.moveRight();
+                                    }
+
+                                    items.eq(++item).trigger('click');
+                                    break;
+                                }
+
+                                e.preventDefault();
+                            });
+
+                        }).bind('focusout', function() {
+                            me.unbind('keydown');
+                        });
+                    },
+					
                     moveUp: function() {
                         if (step.y > 0) {
                             me.animate({
@@ -164,6 +199,7 @@
                                 parent.css("width", items.outerWidth(true) * (items.size() * ct));
                                 parent.append(clone);
                                 max = Math.ceil((items.size() * ct) / config.items) - 1;
+								items = parent.find('li');
 
                                 me.animate({
                                     'scrollLeft': (++step.x * (items.outerWidth(true) * config.items))
@@ -185,6 +221,7 @@
                                 parent.css("height", items.outerHeight(true) * (items.size() * ct));
                                 parent.append(clone);
                                 max = Math.ceil((items.size() * ct) / config.items) - 1;
+								items = parent.find('li');
 
                                 me.animate({
                                     'scrollTop': (++step.y * (items.outerHeight(true) * config.items))
