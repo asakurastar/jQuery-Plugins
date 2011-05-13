@@ -91,7 +91,7 @@
                         });
 
                         $(document).bind('mousemove.moveit', function(e) {
-                            if ($scroll.data('move').scroll) {
+                            if ($scroll.data('move') && $scroll.data('move').scroll == true) {
                                 var posicao = e.pageX - $scroll.data('move').X;
 
                                 if (posicao < 0) {
