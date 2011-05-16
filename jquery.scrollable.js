@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Scrollable
  * 
- * @version     1.0
+ * @version     1.1
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -27,7 +27,6 @@
  *
  * Regras:
  * As LI precisam possuir tamanho definido (Width e Height)
- * A classe pai do elemento definido no parametro scroll precisa possuir tamanho fixo (Width)
  *
  */
 
@@ -75,14 +74,16 @@
 
                         $items.css('float', 'left');
 
-                        total = ($parent.width() - ($scroll.parent().outerWidth(true) - $scroll.outerWidth(true))) / $scroll.parent().width();
+                        $scroll.parent().css('width', $me.outerWidth(true));
+
+                        total = ($parent.outerWidth(true) - $me.outerWidth(true)) / ($me.outerWidth(true) - $scroll.outerWidth(true));
                     },
 
                     doBind: function() {
                         $scroll.bind('mousedown.moveit', function(e) {
                             $(this).data('move', {
                                 'start': $(this).parent().offset().left,
-                                'end': $(this).parent().offset().left + $(this).parent().width() - $(this).width(),
+                                'end': $(this).parent().offset().left + $(this).parent().outerWidth(true) - $(this).outerWidth(true),
                                 'X': e.pageX - $(this).offset().left,
                                 'scroll': true
                             });
@@ -119,7 +120,7 @@
                         });
 
                         $scroll.parent().bind('click.moveit', function(e) {
-                            var posicao = e.pageX - parseInt($scroll.width() / 2);
+                            var posicao = e.pageX - parseInt($scroll.outerWidth(true) / 2);
 
                             if (posicao < 0) {
                                 posicao = 0;
