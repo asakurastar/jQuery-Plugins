@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Scrollable
  * 
- * @version     1.1
+ * @version     1.2
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -122,6 +122,24 @@
                         $scroll.parent().bind('click.moveit', function(e) {
                             var posicao = e.pageX - parseInt($scroll.outerWidth(true) / 2);
 
+                            if (posicao < 0) {
+                                posicao = 0;
+                            }
+
+                            else if (posicao > $scroll.parent().outerWidth(true) - $scroll.outerWidth(true)) {
+                                posicao = $scroll.parent().outerWidth(true) - $scroll.outerWidth(true);
+                            }
+
+                            $scroll.css('position', 'absolute');
+                            $scroll.css('left', posicao);
+
+                            $me.scrollLeft(posicao * total);
+
+                        });
+
+                        $parent.bind('mousemove.moveit', function(e) {
+                            var posicao = e.pageX - parseInt($scroll.outerWidth(true) / 2);
+							
                             if (posicao < 0) {
                                 posicao = 0;
                             }

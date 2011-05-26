@@ -43,7 +43,7 @@
                 dir: 'h',
                 duration: 'slow',
                 mouseMove: false,
-								keyMove: false,
+				keyMove: false,
                 onStart: function() {},
                 onChange: function() {},
                 onClick: function() {}
@@ -85,9 +85,9 @@
                             methods.moveable();
                         }
 						
-												if (config.keyMove) {
-													methods.moveByKey();
-												}
+						if (config.keyMove) {
+							methods.moveByKey();
+						}
 
                         methods.start();
                     },
