@@ -33,8 +33,6 @@
  *   show: 0, //Define um valor em milisegundos para os elementos se deslocarem automaticamente. Caso o valor seja 0, então será desconsiderado
  * });
  *
- * Todos os elementos com atributo rel="algum valor" possuirão tooltip, e, o texto do tooltip se refere ao conteúdo deste rel
- * É necessário incluir o arquivo jquery.tipme.css juntamente com este
  */
 
 (function($) {
