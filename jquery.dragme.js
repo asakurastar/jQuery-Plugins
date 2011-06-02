@@ -3,7 +3,7 @@
  *
  * Utilizado para criar Drag & Drop em elementos HTML
  * 
- * @version     1.0
+ * @version     1.1
  * 
  * Exemplos de estrutura HTML
  *
@@ -20,12 +20,13 @@
  * Forma de uso:
  * 
  * $('.drag').dragme({
- *   drop : '.drop', //Define os itens que permitem Drop (Podem ser os mesmos itens que realizam drag)
- *   onDragMove : function([MouseEvent]) {}, //Função callback que dispara quando um objeto está sendo arrastado (drag). O argumento opcional, retorna um Mouse Event
+ *   drop : '.drop', //Define os itens que permitem Drop
+ *   onDragMove : function([MouseEvent]) {}, //Função callback que dispara quando um objeto está sendo arrastado (drag). O argumento opcional, retorna um Objeto Mouse Event
  *   onDropTouch : function([object]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) encosta em um objeto que permite drop. O argumento
  *   opcional retorna um objeto jQuery do objeto drop
  *   onDropRelease : function([object]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) é solto em cima de um objeto que permite drop. O argumento
  *   opcional retorna um objeto jQuery do objeto drop
+ *   returnNoDrop : true //Indica se o elemento que permite drag deve retornar para sua posição de origem caso não tenha sido solto em cima de um objeto que permite drop.
  * });
  *
  */
@@ -37,7 +38,8 @@
                 drop: '.drop',
                 onDragMove: function() {},
                 onDropTouch: function() {},
-                onDropRelease: function() {}
+                onDropRelease: function() {},
+                returnNoDrop: true
             };
 
             if (settings) {
@@ -51,62 +53,60 @@
                 var $me = $(this);
 
                 $me.bind('mousedown.dragdrop', function(e) {
-                    $(this).removeData('drag');
-                    $(this).css('z-index', 1);
-
-                    $(this).data('drag', {
-                        'X': e.pageX - $(this).offset().left,
-                        'Y': e.pageY - $(this).offset().top
+                    drag = $(this);
+                    drag.data('drag', {
+                        'X': e.pageX - drag.position().left,
+                        'Y': e.pageY - drag.position().top
                     });
 
                     return false;
                 });
 
                 $(document).bind('mouseup.dragdrop', function() {
-                    $me.each(function() {
-                        $(this).removeData('drag');
-                        $(this).css('z-index', 0);
-                    });
+                    if (drag) {
+                        if (target) {
+                            config.onDropRelease(target);
+                            target = undefined;
+                        }
+                        else {
+                            if (config.returnNoDrop) {
+                                drag.fadeOut('fast', function() {
+                                    $(this).css('position', 'static');
+                                    $(this).fadeIn('fast');
+                                });
+                            }
+                        }
 
-                    drag = undefined;
+                        drag.removeData('drag');
+                        drag = undefined;
 
-                    if (target) {
-                        config.onDropRelease(target);
-                        target = undefined;
+                        return false;
                     }
-
-                    return false;
                 });
 
                 $(document).bind('mousemove.dragdrop', function(e) {
-                    $me.each(function() {
+                    if (drag) {
+                        drag.css({
+                            'position': 'absolute',
+                            'left': e.pageX - drag.data('drag').X,
+                            'top': e.pageY - drag.data('drag').Y
+                        });
 
-                        if ($(this).data('drag')) {
-                            drag = $(this);
+                        target = undefined;
 
-                            $(this).css({
-                                'position': 'absolute',
-                                'left': e.pageX - $(this).data('drag').X,
-                                'top': e.pageY - $(this).data('drag').Y
-                            });
+                        $(config.drop).each(function() {
 
-                            config.onDragMove(e);
-                            target = undefined;
+                            if ((drag.offset().left > $(this).offset().left) && (drag.offset().left < ($(this).offset().left + $(this).width())) && (drag.offset().top > $(this).offset().top) && (drag.offset().top < ($(this).offset().top + $(this).height()))) {
+                                target = $(this);
+                                config.onDropTouch(target);
+                            } else {
+                                config.onDragMove(e);
+                            }
+                        });
 
-                            $(config.drop).each(function() {
-
-                                if ((drag.offset().left > $(this).offset().left) && (drag.offset().left < ($(this).offset().left + $(this).width())) && (drag.offset().top > $(this).offset().top) && (drag.offset().top < ($(this).offset().top + $(this).height()))) {
-                                    target = $(this);
-
-                                    config.onDropTouch(target);
-                                }
-                            });
-
-                            return false;
-                        }
-                    });
+                        return false;
+                    }
                 });
-
             });
         }
     });
