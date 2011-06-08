@@ -2,7 +2,7 @@
  * jQuery Plugin - Slider
  * 
  * @version     3.7
- * @description 
+ * @description Plugin utilizado para realizar animação "Slider". Permitindo criar diversos tipos de efeitos (Ex: Galeria de imagens)
  * 
  * Estrutura HTML de Exemplo:
  *
