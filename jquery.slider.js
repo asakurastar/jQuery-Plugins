@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin - Slider
  * 
- * @version     3.6
+ * @version     3.7
  * @description 
  * 
  * Estrutura HTML de Exemplo:
@@ -28,7 +28,8 @@
  *   keyMove: false, //Permite ou não trocar de imagem pelo teclado (Não funciona no Google Chrome)
  *   onStart: function( [object] ) {}, //Callback que será disparada após o plugin ser inicializado. O argumento opcional retorna o item inicial em objeto jQuery
  *   onChange: function() {}, //Callback que será disparada a cada mudança de bloco
- *   onClick: function( [object] ) {} //Callback que será disparado ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
+ *   onClick: function( [object] ) {}, //Callback que será disparada ao clicar em um item. O argumento opcional retorna o item em objeto jQuery
+ *   slidePlay: '.play' //Define um elemento que, ao ser clicado irá iniciar / encerrar uma exibição em slideshow. A duração da transição é de 5 segundos
  * });
  * 
  */
@@ -43,10 +44,11 @@
                 dir: 'h',
                 duration: 'slow',
                 mouseMove: false,
-				keyMove: false,
+                keyMove: false,
                 onStart: function() {},
                 onChange: function() {},
-                onClick: function() {}
+                onClick: function() {},
+                slidePlay: '.play',
             };
 
             if (settings) {
@@ -64,6 +66,7 @@
                 var max = Math.ceil(items.size() / config.items) - 1;
                 var ct = 1;
                 var item;
+                var show;
 
                 var methods = {
 
@@ -79,15 +82,17 @@
                             $(config.right).click(methods.moveDown);
                         }
 
+                        $(config.slidePlay).click(methods.slideShow);
+
                         methods.bindClick();
 
                         if (config.mouseMove) {
                             methods.moveable();
                         }
-						
-						if (config.keyMove) {
-							methods.moveByKey();
-						}
+
+                        if (config.keyMove) {
+                            methods.moveByKey();
+                        }
 
                         methods.start();
                     },
@@ -105,6 +110,29 @@
                         }
 
                         items.css("float", "left");
+                    },
+
+
+                    slideShow: function() {
+                        if (typeof(show) == 'undefined') {
+                            show = setInterval(function() {
+
+                                if (item % config.items == (config.items - 1)) {
+                                    if (config.dir == 'h') {
+                                        methods.moveRight();
+                                    }
+                                    else {
+                                        methods.moveDown();
+                                    }
+                                }
+
+                                items.eq(++item).trigger('click');
+                            }, 5000);
+                        }
+                        else {
+                            clearInterval(show);
+                            show = undefined;
+                        }
                     },
 
                     moveable: function() {
@@ -140,7 +168,7 @@
                             $(this).unbind('mousemove');
                         });
                     },
-					
+
                     moveByKey: function() {
 
                         me.bind('focusin', function() {
@@ -151,6 +179,7 @@
                                     if (item % config.items == (config.items - 1)) {
                                         methods.moveLeft();
                                     }
+									
                                     items.eq(--item).trigger('click');
                                     break;
                                 case 39:
@@ -169,7 +198,7 @@
                             me.unbind('keydown');
                         });
                     },
-					
+
                     moveUp: function() {
                         if (step.y > 0) {
                             me.animate({
@@ -199,7 +228,7 @@
                                 parent.css("width", items.outerWidth(true) * (items.size() * ct));
                                 parent.append(clone);
                                 max = Math.ceil((items.size() * ct) / config.items) - 1;
-								items = parent.find('li');
+                                items = parent.find('li');
 
                                 me.animate({
                                     'scrollLeft': (++step.x * (items.outerWidth(true) * config.items))
@@ -221,7 +250,7 @@
                                 parent.css("height", items.outerHeight(true) * (items.size() * ct));
                                 parent.append(clone);
                                 max = Math.ceil((items.size() * ct) / config.items) - 1;
-								items = parent.find('li');
+                                items = parent.find('li');
 
                                 me.animate({
                                     'scrollTop': (++step.y * (items.outerHeight(true) * config.items))
