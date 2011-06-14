@@ -3,7 +3,7 @@
  *
  * Utilizado para criar Drag & Drop em elementos HTML
  * 
- * @version     1.1
+ * @version     1.2
  * 
  * Exemplos de estrutura HTML
  *
@@ -24,6 +24,8 @@
  *   onDragMove : function([MouseEvent]) {}, //Função callback que dispara quando um objeto está sendo arrastado (drag). O argumento opcional, retorna um Objeto Mouse Event
  *   onDropTouch : function([object]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) encosta em um objeto que permite drop. O argumento
  *   opcional retorna um objeto jQuery do objeto drop
+ *   onDragRelease : function([MouseEvent]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) é solto, porém, não em cima de um objeto que permite drop.
+ *   O argumento opcional retorna um objeto Mouse Event
  *   onDropRelease : function([object]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) é solto em cima de um objeto que permite drop. O argumento
  *   opcional retorna um objeto jQuery do objeto drop
  *   returnNoDrop : true //Indica se o elemento que permite drag deve retornar para sua posição de origem caso não tenha sido solto em cima de um objeto que permite drop.
@@ -38,6 +40,7 @@
                 drop: '.drop',
                 onDragMove: function() {},
                 onDropTouch: function() {},
+				onDragRelease: function() {},
                 onDropRelease: function() {},
                 returnNoDrop: true
             };
@@ -62,13 +65,15 @@
                     return false;
                 });
 
-                $(document).bind('mouseup.dragdrop', function() {
+                $(document).bind('mouseup.dragdrop', function(e) {
                     if (drag) {
                         if (target) {
                             config.onDropRelease(target);
                             target = undefined;
                         }
                         else {
+							config.onDragRelease(e);
+							
                             if (config.returnNoDrop) {
                                 drag.fadeOut('fast', function() {
                                     $(this).css('position', 'static');
