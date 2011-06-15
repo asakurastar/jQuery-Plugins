@@ -3,7 +3,7 @@
  *
  * Utilizado para criar Drag & Drop em elementos HTML
  * 
- * @version     1.2
+ * @version     1.3
  * 
  * Exemplos de estrutura HTML
  *
@@ -26,93 +26,93 @@
  *   opcional retorna um objeto jQuery do objeto drop
  *   onDragRelease : function([MouseEvent]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) é solto, porém, não em cima de um objeto que permite drop.
  *   O argumento opcional retorna um objeto Mouse Event
- *   onDropRelease : function([object]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) é solto em cima de um objeto que permite drop. O argumento
- *   opcional retorna um objeto jQuery do objeto drop
+ *   onDropRelease : function([object], [object]) {}, //Função callback que dispara quando um objeto que está sendo arrastado (drag) é solto em cima de um objeto que permite drop. O primeiro argumento
+ *   opcional retorna um objeto jQuery do objeto sendo arrastado (drag). O segundo argumento opcional retorna um objeto jQuery do objeto drop.
  *   returnNoDrop : true //Indica se o elemento que permite drag deve retornar para sua posição de origem caso não tenha sido solto em cima de um objeto que permite drop.
  * });
  *
  */
 
 (function($) {
-    $.fn.extend({
-        dragme: function(settings) {
-            var config = {
-                drop: '.drop',
-                onDragMove: function() {},
-                onDropTouch: function() {},
+	$.fn.extend({
+		dragme: function(settings) {
+			var config = {
+				drop: '.drop',
+				onDragMove: function() {},
+				onDropTouch: function() {},
 				onDragRelease: function() {},
-                onDropRelease: function() {},
-                returnNoDrop: true
-            };
+				onDropRelease: function() {},
+				returnNoDrop: true
+			};
 
-            if (settings) {
-                $.extend(config, settings);
-            }
+			if (settings) {
+				$.extend(config, settings);
+			}
 
-            var drag = undefined;
-            var target = undefined;
+			var drag = undefined;
+			var target = undefined;
 
-            return this.each(function() {
-                var $me = $(this);
+			return this.each(function() {
+				var $me = $(this);
 
-                $me.bind('mousedown.dragdrop', function(e) {
-                    drag = $(this);
-                    drag.data('drag', {
-                        'X': e.pageX - drag.position().left,
-                        'Y': e.pageY - drag.position().top
-                    });
+				$me.bind('mousedown.dragdrop', function(e) {
+					drag = $(this);
+					drag.data('drag', {
+						'X': e.pageX - drag.position().left,
+						'Y': e.pageY - drag.position().top
+					});
 
-                    return false;
-                });
+					return false;
+				});
 
-                $(document).bind('mouseup.dragdrop', function(e) {
-                    if (drag) {
-                        if (target) {
-                            config.onDropRelease(target);
-                            target = undefined;
-                        }
-                        else {
+				$(document).bind('mouseup.dragdrop', function(e) {
+					if (drag) {
+						if (target) {
+							config.onDropRelease(drag, target);
+							target = undefined;
+						}
+						else {
 							config.onDragRelease(e);
 							
-                            if (config.returnNoDrop) {
-                                drag.fadeOut('fast', function() {
-                                    $(this).css('position', 'static');
-                                    $(this).fadeIn('fast');
-                                });
-                            }
-                        }
+							if (config.returnNoDrop) {
+								drag.fadeOut('fast', function() {
+									$(this).css('position', 'static');
+									$(this).fadeIn('fast');
+								});
+							}
+						}
 
-                        drag.removeData('drag');
-                        drag = undefined;
+						drag.removeData('drag');
+						drag = undefined;
 
-                        return false;
-                    }
-                });
+						return false;
+					}
+				});
 
-                $(document).bind('mousemove.dragdrop', function(e) {
-                    if (drag) {
-                        drag.css({
-                            'position': 'absolute',
-                            'left': e.pageX - drag.data('drag').X,
-                            'top': e.pageY - drag.data('drag').Y
-                        });
+				$(document).bind('mousemove.dragdrop', function(e) {
+					if (drag) {
+						drag.css({
+							'position': 'absolute',
+							'left': e.pageX - drag.data('drag').X,
+							'top': e.pageY - drag.data('drag').Y
+						});
 
-                        target = undefined;
+						target = undefined;
 
-                        $(config.drop).each(function() {
+						$(config.drop).each(function() {
 
-                            if ((drag.offset().left > $(this).offset().left) && (drag.offset().left < ($(this).offset().left + $(this).width())) && (drag.offset().top > $(this).offset().top) && (drag.offset().top < ($(this).offset().top + $(this).height()))) {
-                                target = $(this);
-                                config.onDropTouch(target);
-                            } else {
-                                config.onDragMove(e);
-                            }
-                        });
+							if ((drag.offset().left > $(this).offset().left) && (drag.offset().left < ($(this).offset().left + $(this).width())) && (drag.offset().top > $(this).offset().top) && (drag.offset().top < ($(this).offset().top + $(this).height()))) {
+								target = $(this);
+								config.onDropTouch(target);
+							} else {
+								config.onDragMove(e);
+							}
+						});
 
-                        return false;
-                    }
-                });
-            });
-        }
-    });
+						return false;
+					}
+				});
+			});
+		}
+	});
 })(jQuery);
