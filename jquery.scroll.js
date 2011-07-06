@@ -1,7 +1,7 @@
 /*!
  * jQuery Plugin - Scroll
  * 
- * @version     1.1
+ * @version     1.2
  * @description Plugin utilizado para criar barras de rolagem horizontal e/ou vertical. Inclui o plugin de Brandon Aaron para controle de mousewheel
  * @example http://jsfiddle.net/cuceta/mbLA9/
  * 
@@ -32,6 +32,7 @@
  * Versão:
  * 1.0 Plugin liberado
  * 1.1 As setas do teclado permitem deslocar as barras de rolagem
+ * 1.2 Correções para ajustes de controle de rolagem
  */
 
 /*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
@@ -65,117 +66,127 @@
                     X: 1,
                     Y: 1
                 };
+                var size = {};
 
                 var methods = {
                     start: function() {
-						//Evita exibir barras de rolagem quando o conteúdo for inferior ao conteudo pai. (Ex: conteúdo: 999px, pai: 1000px)
-                        if ($me.height() < me.scrollHeight && $me.width() < me.scrollWidth) {
-                            methods.normalize();
-                            methods.bind();
-                        }
+                        methods.normalize();
+                        methods.bind();
                     },
                     normalize: function() {
-                        var size = {};
-
                         size.Y = $me.height() - (me.scrollHeight - $me.height());
                         size.X = $me.width() - (me.scrollWidth - $me.width());
 
-						/* Define um valor default para 18px quando a barra de rolagem for muito pequena */
-						//Barra Vertical
                         if (size.Y < 0) {
                             size.Y = 18;
                             step.Y = (me.scrollHeight - $me.height()) / ($me.height() - size.Y)
                         }
 
-						//Barra Horizontal
                         if (size.X < 0) {
                             size.X = 18;
                             step.X = (me.scrollWidth - $me.width()) / ($me.width() - size.X)
                         }
 
-                        $(config.top).css('height', size.Y);
-                        $(config.left).css('width', size.X);
-
-                        if (typeof $me.attr('tabindex') === 'undefined' || $me.attr('tabindex') === false) {
-                            $me.attr('tabindex', 9999);
+                        if (methods.needVertical()) {
+                            $(config.top).css('height', size.Y);
+                        }
+                        else {
+                            $(config.top).css('display', 'none');
+                        }
+                        if (methods.needHorizontal()) {
+                            $(config.left).css('width', size.X);
+                        }
+                        else {
+                            $(config.left).css('display', 'none');
                         }
 
+                        if (methods.needVertical() || methods.needHorizontal()) {
+                            if (typeof $me.attr('tabindex') === 'undefined' || $me.attr('tabindex') === false) {
+                                $me.attr('tabindex', 9999);
+                            }
+                        }
                     },
 
                     bind: function() {
-                        $(config.top).bind('mousedown.scroll', function(e) {
-                            $(this).data('scroll', {
-                                start: 0,
-                                Y: e.pageY - $(this).position().top
+                        if (methods.needVertical()) {
+                            $(config.top).bind('mousedown.scroll', function(e) {
+                                $(this).data('scroll', {
+                                    start: 0,
+                                    Y: e.pageY - $(this).position().top
+                                });
+
+                                return false;
                             });
+                        }
 
-                            curr = 1;
+                        if (methods.needHorizontal()) {
+                            $(config.left).bind('mousedown.scroll', function(e) {
+                                $(this).data('scroll', {
+                                    start: 0,
+                                    X: e.pageX - $(this).position().left
+                                });
 
-                            return false;
-                        });
-
-                        $(config.left).bind('mousedown.scroll', function(e) {
-                            $(this).data('scroll', {
-                                start: 0,
-                                X: e.pageX - $(this).position().left
+                                return false;
                             });
-
-                            curr = 0;
-
-                            return false;
-                        });
+                        }
 
                         $(document).bind('mousemove.scroll', function(e) {
-                            if ($(config.top).data('scroll')) {
-                                var position = e.pageY - $(config.top).data('scroll').Y;
+                            if (methods.needVertical()) {
+                                if ($(config.top).data('scroll')) {
+                                    var position = e.pageY - $(config.top).data('scroll').Y;
 
-                                if (position <= $(config.top).data('scroll').start) {
-                                    position = $(config.top).data('scroll').start;
+                                    if (position <= $(config.top).data('scroll').start) {
+                                        position = $(config.top).data('scroll').start;
+                                    }
+                                    if (position >= (($me.height() - $(config.top).height()) + $(config.top).data('scroll').start)) {
+                                        position = ($me.height() - $(config.top).height()) + $(config.top).data('scroll').start;
+                                    }
+
+                                    $(config.top).css({
+                                        position: 'absolute',
+                                        left: $(config.top).position().left,
+                                        top: position
+                                    });
+
+                                    $me.scrollTop(position * step.Y);
                                 }
-                                if (position >= (($me.height() - $(config.top).height()) + $(config.top).data('scroll').start)) {
-                                    position = ($me.height() - $(config.top).height()) + $(config.top).data('scroll').start;
+                            }
+
+                            if (methods.needHorizontal()) {
+                                if ($(config.left).data('scroll')) {
+                                    var position = e.pageX - $(config.left).data('scroll').X;
+
+                                    if (position <= $(config.left).data('scroll').start) {
+                                        position = $(config.left).data('scroll').start;
+                                    }
+                                    if (position >= (($me.width() - $(config.left).width()) + $(config.left).data('scroll').start)) {
+                                        position = ($me.width() - $(config.left).width()) + $(config.left).data('scroll').start;
+                                    }
+
+                                    $(config.left).css({
+                                        position: 'absolute',
+                                        top: $(config.left).position().top,
+                                        left: position
+                                    });
+
+                                    $me.scrollLeft(position * step.X);
                                 }
+                            }
+                            return false;
+                        });
+
+                        if (methods.needVertical()) {
+                            $me.bind('mousewheel.scroll', function(event, delta) {
+                                $(this).scrollTop($(this).scrollTop() - delta * 10);
 
                                 $(config.top).css({
                                     position: 'absolute',
-                                    left: $(config.top).position().left,
-                                    top: position
+                                    top: $(this).scrollTop() / step.Y
                                 });
 
-                                $me.scrollTop(position * step.Y);
-                            }
-
-                            if ($(config.left).data('scroll')) {
-                                var position = e.pageX - $(config.left).data('scroll').X;
-
-                                if (position <= $(config.left).data('scroll').start) {
-                                    position = $(config.left).data('scroll').start;
-                                }
-                                if (position >= (($me.width() - $(config.left).width()) + $(config.left).data('scroll').start)) {
-                                    position = ($me.width() - $(config.left).width()) + $(config.left).data('scroll').start;
-                                }
-
-                                $(config.left).css({
-                                    position: 'absolute',
-                                    top: $(config.left).position().top,
-                                    left: position
-                                });
-
-                                $me.scrollLeft(position * step.X);
-                            }
-                            return false;
-                        });
-
-                        $me.bind('mousewheel.scroll', function(event, delta) {
-                            $(this).scrollTop($(this).scrollTop() - delta * 10);
-
-                            $(config.top).css({
-                                position: 'absolute',
-                                top: $(this).scrollTop() / step.Y
+                                return false;
                             });
-
-                            return false;
-                        });
+                        }
 
                         $me.bind('keydown.scroll', function(e) {
                             $(config.top).css('position', 'absolute');
@@ -184,26 +195,34 @@
                             switch (e.which) {
                             case 37:
                                 {
-                                    $(this).scrollLeft($(this).scrollLeft() - 10);
-                                    $(config.left).css('left', $(this).scrollLeft() / step.X);
+                                    if (methods.needHorizontal()) {
+                                        $(this).scrollLeft($(this).scrollLeft() - 10);
+                                        $(config.left).css('left', $(this).scrollLeft() / step.X);
+                                    }
                                     break;
                                 }
                             case 38:
                                 {
-                                    $(this).scrollTop($(this).scrollTop() - 10);
-                                    $(config.top).css('top', $(this).scrollTop() / step.Y);
+                                    if (methods.needVertical()) {
+                                        $(this).scrollTop($(this).scrollTop() - 10);
+                                        $(config.top).css('top', $(this).scrollTop() / step.Y);
+                                    }
                                     break;
                                 }
                             case 39:
                                 {
-                                    $(this).scrollLeft($(this).scrollLeft() + 10);
-                                    $(config.left).css('left', $(this).scrollLeft() / step.X);
+                                    if (methods.needHorizontal()) {
+                                        $(this).scrollLeft($(this).scrollLeft() + 10);
+                                        $(config.left).css('left', $(this).scrollLeft() / step.X);
+                                    }
                                     break;
                                 }
                             case 40:
                                 {
-                                    $(this).scrollTop($(this).scrollTop() + 10);
-                                    $(config.top).css('top', $(this).scrollTop() / step.Y);
+                                    if (methods.needVertical()) {
+                                        $(this).scrollTop($(this).scrollTop() + 10);
+                                        $(config.top).css('top', $(this).scrollTop() / step.Y);
+                                    }
                                     break;
                                 }
                             }
@@ -211,9 +230,21 @@
                         });
 
                         $(document).bind('mouseup.scroll', function() {
-                            $(config.top).removeData('scroll');
-                            $(config.left).removeData('scroll');
+                            if (methods.needVertical()) {
+                                $(config.top).removeData('scroll');
+                            }
+                            if (methods.needHorizontal()) {
+                                $(config.left).removeData('scroll');
+                            }
                         });
+                    },
+
+                    needVertical: function() {
+                        return ($me.height() < me.scrollHeight);
+                    },
+
+                    needHorizontal: function() {
+                        return ($me.width() < me.scrollWidth);
                     },
 
                     init: function() {
