@@ -1,7 +1,7 @@
 /*!
  * jQuery Plugin - Scroll
  * 
- * @version     1.0
+ * @version     1.1
  * @description Plugin utilizado para criar barras de rolagem horizontal e/ou vertical. Inclui o plugin de Brandon Aaron para controle de mousewheel
  * @example http://jsfiddle.net/cuceta/mbLA9/
  * 
@@ -28,6 +28,10 @@
  * Regras:
  * - Se as dimensões do conteúdo forem inferiores às do tamanho de seu elemento pai, não existirão barras de rolagem.
  * - O mousewheel permite controlar apenas a barra de rolagem vertical.
+ *
+ * Versão:
+ * 1.0 Plugin liberado
+ * 1.1 As setas do teclado permitem deslocar as barras de rolagem
  */
 
 /*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
@@ -91,6 +95,11 @@
 
                         $(config.top).css('height', size.Y);
                         $(config.left).css('width', size.X);
+
+                        if (typeof $me.attr('tabindex') === 'undefined' || $me.attr('tabindex') === false) {
+                            $me.attr('tabindex', 9999);
+                        }
+
                     },
 
                     bind: function() {
@@ -100,6 +109,8 @@
                                 Y: e.pageY - $(this).position().top
                             });
 
+                            curr = 1;
+
                             return false;
                         });
 
@@ -108,6 +119,8 @@
                                 start: 0,
                                 X: e.pageX - $(this).position().left
                             });
+
+                            curr = 0;
 
                             return false;
                         });
@@ -161,6 +174,39 @@
                                 top: $(this).scrollTop() / step.Y
                             });
 
+                            return false;
+                        });
+
+                        $me.bind('keydown.scroll', function(e) {
+                            $(config.top).css('position', 'absolute');
+                            $(config.left).css('position', 'absolute');
+
+                            switch (e.which) {
+                            case 37:
+                                {
+                                    $(this).scrollLeft($(this).scrollLeft() - 10);
+                                    $(config.left).css('left', $(this).scrollLeft() / step.X);
+                                    break;
+                                }
+                            case 38:
+                                {
+                                    $(this).scrollTop($(this).scrollTop() - 10);
+                                    $(config.top).css('top', $(this).scrollTop() / step.Y);
+                                    break;
+                                }
+                            case 39:
+                                {
+                                    $(this).scrollLeft($(this).scrollLeft() + 10);
+                                    $(config.left).css('left', $(this).scrollLeft() / step.X);
+                                    break;
+                                }
+                            case 40:
+                                {
+                                    $(this).scrollTop($(this).scrollTop() + 10);
+                                    $(config.top).css('top', $(this).scrollTop() / step.Y);
+                                    break;
+                                }
+                            }
                             return false;
                         });
 
